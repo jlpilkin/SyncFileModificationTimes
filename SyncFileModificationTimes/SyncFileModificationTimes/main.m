@@ -10,6 +10,14 @@
 #import "JPToolsStringUtils.h"
 #import "JLPSyncFileInfo.h"
 
+/**
+ * @discussion Main entry point for the sync modifications time application.
+ *             This application is ran from the daemon every time a file
+ *             change is detected.
+ *
+ * @param argc Argument count
+ * @param argv Arguments
+ */
 int main( int argc, const char * argv[] )
 {
 	@autoreleasepool

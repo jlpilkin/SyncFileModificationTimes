@@ -7,12 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E6C6D171CC35A9E00887455 /* daemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6C6D0A1CC35A3D00887455 /* daemon.m */; };
+		9E6C6D181CC35AB500887455 /* JPToolsStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8731C7CEB5400D3C6C2 /* JPToolsStringUtils.m */; };
+		9E6C6D1D1CC35BA700887455 /* JLPSyncFileInfoDaemonSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6C6D1B1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.m */; };
 		9E80C86A1C7CE86800D3C6C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8691C7CE86800D3C6C2 /* main.m */; };
 		9E80C8741C7CEB5400D3C6C2 /* JPToolsStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8731C7CEB5400D3C6C2 /* JPToolsStringUtils.m */; };
 		9E80C8771C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9E6C6D0E1CC35A9100887455 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		9E80C8641C7CE86800D3C6C2 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -25,6 +37,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9E6C6D0A1CC35A3D00887455 /* daemon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = daemon.m; sourceTree = "<group>"; };
+		9E6C6D101CC35A9100887455 /* SyncFileModificationTimesDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SyncFileModificationTimesDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E6C6D1A1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSyncFileInfoDaemonSettings.h; sourceTree = "<group>"; };
+		9E6C6D1B1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfoDaemonSettings.m; sourceTree = "<group>"; };
 		9E80C8661C7CE86800D3C6C2 /* SyncFileModificationTimes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SyncFileModificationTimes; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E80C8691C7CE86800D3C6C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9E80C8721C7CEB5400D3C6C2 /* JPToolsStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JPToolsStringUtils.h; path = Libraries/JPTools/JPToolsStringUtils.h; sourceTree = "<group>"; };
@@ -34,6 +50,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9E6C6D0D1CC35A9100887455 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E80C8631C7CE86800D3C6C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -56,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				9E80C8661C7CE86800D3C6C2 /* SyncFileModificationTimes */,
+				9E6C6D101CC35A9100887455 /* SyncFileModificationTimesDaemon */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,6 +91,9 @@
 				9E80C8691C7CE86800D3C6C2 /* main.m */,
 				9E80C8751C7D0A3A00D3C6C2 /* JLPSyncFileInfo.h */,
 				9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */,
+				9E6C6D0A1CC35A3D00887455 /* daemon.m */,
+				9E6C6D1A1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.h */,
+				9E6C6D1B1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.m */,
 			);
 			path = SyncFileModificationTimes;
 			sourceTree = "<group>";
@@ -83,6 +110,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9E6C6D0F1CC35A9100887455 /* SyncFileModificationTimesDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E6C6D141CC35A9100887455 /* Build configuration list for PBXNativeTarget "SyncFileModificationTimesDaemon" */;
+			buildPhases = (
+				9E6C6D0C1CC35A9100887455 /* Sources */,
+				9E6C6D0D1CC35A9100887455 /* Frameworks */,
+				9E6C6D0E1CC35A9100887455 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SyncFileModificationTimesDaemon;
+			productName = SyncFileModificationTimesDaemon;
+			productReference = 9E6C6D101CC35A9100887455 /* SyncFileModificationTimesDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
 		9E80C8651C7CE86800D3C6C2 /* SyncFileModificationTimes */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E80C86D1C7CE86800D3C6C2 /* Build configuration list for PBXNativeTarget "SyncFileModificationTimes" */;
@@ -109,6 +153,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Joshua Pilkington";
 				TargetAttributes = {
+					9E6C6D0F1CC35A9100887455 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					9E80C8651C7CE86800D3C6C2 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -127,11 +174,22 @@
 			projectRoot = "";
 			targets = (
 				9E80C8651C7CE86800D3C6C2 /* SyncFileModificationTimes */,
+				9E6C6D0F1CC35A9100887455 /* SyncFileModificationTimesDaemon */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9E6C6D0C1CC35A9100887455 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E6C6D1D1CC35BA700887455 /* JLPSyncFileInfoDaemonSettings.m in Sources */,
+				9E6C6D181CC35AB500887455 /* JPToolsStringUtils.m in Sources */,
+				9E6C6D171CC35A9E00887455 /* daemon.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E80C8621C7CE86800D3C6C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -145,6 +203,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		9E6C6D151CC35A9100887455 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9E6C6D161CC35A9100887455 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		9E80C86B1C7CE86800D3C6C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -241,6 +315,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9E6C6D141CC35A9100887455 /* Build configuration list for PBXNativeTarget "SyncFileModificationTimesDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E6C6D151CC35A9100887455 /* Debug */,
+				9E6C6D161CC35A9100887455 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		9E80C8611C7CE86800D3C6C2 /* Build configuration list for PBXProject "SyncFileModificationTimes" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -257,6 +339,7 @@
 				9E80C86F1C7CE86800D3C6C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
