@@ -13,6 +13,8 @@
 		9E80C86A1C7CE86800D3C6C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8691C7CE86800D3C6C2 /* main.m */; };
 		9E80C8741C7CEB5400D3C6C2 /* JPToolsStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8731C7CEB5400D3C6C2 /* JPToolsStringUtils.m */; };
 		9E80C8771C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */; };
+		9EBF6A211CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */; };
+		9EBF6A241CC456D800C9E1DE /* JLPSyncFileInfoThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +49,10 @@
 		9E80C8731C7CEB5400D3C6C2 /* JPToolsStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JPToolsStringUtils.m; path = Libraries/JPTools/JPToolsStringUtils.m; sourceTree = "<group>"; };
 		9E80C8751C7D0A3A00D3C6C2 /* JLPSyncFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSyncFileInfo.h; sourceTree = "<group>"; };
 		9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfo.m; sourceTree = "<group>"; };
+		9EBF6A1F1CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSyncFileInfoThreadParams.h; sourceTree = "<group>"; };
+		9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfoThreadParams.m; sourceTree = "<group>"; };
+		9EBF6A221CC456D800C9E1DE /* JLPSyncFileInfoThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSyncFileInfoThread.h; sourceTree = "<group>"; };
+		9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfoThread.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,12 +94,16 @@
 			isa = PBXGroup;
 			children = (
 				9E80C8711C7CEB3900D3C6C2 /* JPTools */,
-				9E80C8691C7CE86800D3C6C2 /* main.m */,
 				9E80C8751C7D0A3A00D3C6C2 /* JLPSyncFileInfo.h */,
 				9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */,
-				9E6C6D0A1CC35A3D00887455 /* daemon.m */,
 				9E6C6D1A1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.h */,
 				9E6C6D1B1CC35B8900887455 /* JLPSyncFileInfoDaemonSettings.m */,
+				9EBF6A1F1CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.h */,
+				9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */,
+				9EBF6A221CC456D800C9E1DE /* JLPSyncFileInfoThread.h */,
+				9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */,
+				9E80C8691C7CE86800D3C6C2 /* main.m */,
+				9E6C6D0A1CC35A3D00887455 /* daemon.m */,
 			);
 			path = SyncFileModificationTimes;
 			sourceTree = "<group>";
@@ -184,9 +194,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EBF6A241CC456D800C9E1DE /* JLPSyncFileInfoThread.m in Sources */,
 				9E6C6D1D1CC35BA700887455 /* JLPSyncFileInfoDaemonSettings.m in Sources */,
 				9E6C6D181CC35AB500887455 /* JPToolsStringUtils.m in Sources */,
 				9E6C6D171CC35A9E00887455 /* daemon.m in Sources */,
+				9EBF6A211CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +334,7 @@
 				9E6C6D161CC35A9100887455 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9E80C8611C7CE86800D3C6C2 /* Build configuration list for PBXProject "SyncFileModificationTimes" */ = {
 			isa = XCConfigurationList;

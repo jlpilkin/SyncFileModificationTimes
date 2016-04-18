@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "JPToolsStringUtils.h"
 #import "JLPSyncFileInfoDaemonSettings.h"
+#import "JLPSyncFileInfoThread.h"
+#import "JLPSyncFileInfoThreadParams.h"
 
 /**
  * @discussion Main entry point for the daemon application
@@ -93,7 +95,53 @@ int main( int argc, const char * argv[] )
 			return 1;
 		}
 		
-		// TODO: Create the NSTasks for each fswatch command
+		// Get the path of the Sync File Infos daemon settings file
+		NSString* filePathLastSyncFileInfoDaemonSettings = [@"~/.syncFileInfosDaemon" stringByExpandingTildeInPath];
+		
+		// Get the daemon settings
+		NSString* errorDaemonSettings = @"[ERROR] Unable to read the daemon settings";
+		NSError* error = nil;
+		JLPSyncFileInfoDaemonSettings* daemonSettings;
+		if(
+			[[NSFileManager defaultManager] fileExistsAtPath:filePathLastSyncFileInfoDaemonSettings
+				isDirectory:&bIsDirectory] &&
+			!bIsDirectory
+		)
+		{
+			NSString* strLastSyncFileInfosDaemonSettingsFileData = [NSString stringWithContentsOfFile:filePathLastSyncFileInfoDaemonSettings encoding:NSUTF8StringEncoding error:&error];
+			if( ![JPToolsStringUtils isNilOrWhitespace:strLastSyncFileInfosDaemonSettingsFileData] )
+			{
+				daemonSettings = [[JLPSyncFileInfoDaemonSettings alloc] initFromString:strLastSyncFileInfosDaemonSettingsFileData];
+				if( daemonSettings == nil || [daemonSettings isEmpty] )
+				{
+					daemonSettings = nil;
+				}
+			}
+			if( daemonSettings == nil )
+			{
+				printf( "%s\n", [errorDaemonSettings cStringUsingEncoding:[NSString defaultCStringEncoding]] );
+				return 1;
+			}
+		}
+		else
+		{
+			printf( "%s\n", [errorDaemonSettings cStringUsingEncoding:[NSString defaultCStringEncoding]] );
+			return 1;
+		}
+		
+		// Create and start threads for each directory
+		JLPSyncFileInfoThreadParams* threadParamsFirst = [[JLPSyncFileInfoThreadParams alloc] initWithParams:daemonSettings.directoryFirst];
+		JLPSyncFileInfoThreadParams* threadParamsSecond = [[JLPSyncFileInfoThreadParams alloc] initWithParams:daemonSettings.directorySecond];
+		JLPSyncFileInfoThread* threadFirst = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsFirst];
+		JLPSyncFileInfoThread* threadSecond = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsSecond];
+		[threadFirst.threadFswatch start];
+		[threadSecond.threadFswatch start];
+		
+		// Wait for threads to end or a SIGTERM
+		while( [threadFirst.threadFswatch isExecuting] && [threadSecond.threadFswatch isExecuting] )
+		{
+			[NSThread sleepForTimeInterval:0.010];
+		}
 	}
 	return 0;
 }
