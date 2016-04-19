@@ -37,7 +37,63 @@
  */
 +(void) runFswatchThread:(NSObject*)params
 {
-	// TODO: Create NSTask for fswatch command
+	// Get a reference to the thread parameters
+	if( params == nil || ![params isKindOfClass:JLPSyncFileInfoThreadParams.class] )
+	{
+		return;
+	}
+	JLPSyncFileInfoThreadParams* threadParams = (JLPSyncFileInfoThreadParams*)params;
+
+	// Create NSTask for fswatch command
+	NSPipe *pipeFswatch = [NSPipe pipe];
+	NSTask *taskFswatch = [[NSTask alloc] init];
+	[taskFswatch setLaunchPath: threadParams.fswatchPath];
+	[taskFswatch setStandardOutput: [NSPipe pipe]];
+	[taskFswatch setStandardOutput: pipeFswatch];
+	taskFswatch.arguments = @[
+		@"-0",
+		threadParams.directoryFilesSource
+	];
+	
+	// Create NSTask for xargs command
+	NSPipe *pipeXargs = [NSPipe pipe];
+	NSTask *taskXargs = [[NSTask alloc] init];
+	taskXargs.launchPath = @"/usr/bin/xargs";
+	[taskXargs setStandardInput: pipeFswatch];
+	[taskXargs setStandardOutput: pipeXargs];
+	taskXargs.arguments = @[
+		@"-0",
+		@"-n",
+		@"1",
+		@"-I",
+		@"{}",
+		threadParams.syncFileModificationTimesPath,
+		threadParams.directoryFilesSource,
+		threadParams.directoryFilesDestination,
+		@"{}"
+	];
+	[taskFswatch launch];
+	[taskXargs launch];
+	
+	// Keep reading the task
+	NSFileHandle *fileXargs = pipeXargs.fileHandleForReading;
+	while( [taskFswatch isRunning] )
+	{
+		NSData* dataLast = [fileXargs availableData];
+		if( dataLast != nil && [dataLast bytes] != NULL )
+		{
+			printf( "%s", (const char*)[dataLast bytes] );
+		}
+		else
+		{
+			[NSThread sleepForTimeInterval:0.010];
+		}
+	}
+	NSData* dataLast = [fileXargs availableData];
+	if( dataLast != nil && [dataLast bytes] != NULL )
+	{
+		printf( "%s", (const char*)[dataLast bytes] );
+	}
 }
 
 @end

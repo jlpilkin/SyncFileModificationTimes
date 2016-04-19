@@ -81,7 +81,7 @@ int main( int argc, const char * argv[] )
 			// Determine if this file exists
 			if(
 				![JPToolsStringUtils isNilOrWhitespace:fswatchPathPreliminary] &&
-				![[NSFileManager defaultManager] fileExistsAtPath:fswatchPathPreliminary isDirectory:&bIsDirectory] &&
+				[[NSFileManager defaultManager] fileExistsAtPath:fswatchPathPreliminary isDirectory:&bIsDirectory] &&
 				!bIsDirectory
 			)
 			{
@@ -130,15 +130,25 @@ int main( int argc, const char * argv[] )
 		}
 		
 		// Create and start threads for each directory
-		JLPSyncFileInfoThreadParams* threadParamsFirst = [[JLPSyncFileInfoThreadParams alloc] initWithParams:daemonSettings.directoryFirst];
-		JLPSyncFileInfoThreadParams* threadParamsSecond = [[JLPSyncFileInfoThreadParams alloc] initWithParams:daemonSettings.directorySecond];
+		JLPSyncFileInfoThreadParams* threadParamsFirst = [[JLPSyncFileInfoThreadParams alloc]
+			initWithParams:daemonSettings.directoryFirst
+			directoryFilesDestination:daemonSettings.directorySecond
+			fswatchPath:fswatchPath
+			syncFileModificationTimesPath:pathSyncFileModificationTimes
+			shellPath:@"/bin/bash"];
+		JLPSyncFileInfoThreadParams* threadParamsSecond = [[JLPSyncFileInfoThreadParams alloc]
+			initWithParams:daemonSettings.directorySecond
+			directoryFilesDestination:daemonSettings.directoryFirst
+			fswatchPath:fswatchPath
+			syncFileModificationTimesPath:pathSyncFileModificationTimes
+			shellPath:@"/bin/bash"];
 		JLPSyncFileInfoThread* threadFirst = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsFirst];
 		JLPSyncFileInfoThread* threadSecond = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsSecond];
 		[threadFirst.threadFswatch start];
 		[threadSecond.threadFswatch start];
 		
 		// Wait for threads to end or a SIGTERM
-		while( [threadFirst.threadFswatch isExecuting] && [threadSecond.threadFswatch isExecuting] )
+		while( [threadFirst.threadFswatch isExecuting] || [threadSecond.threadFswatch isExecuting] )
 		{
 			[NSThread sleepForTimeInterval:0.010];
 		}

@@ -20,7 +20,11 @@
 	self = [super init];
 	if( self != nil )
 	{
-		self.directoryFiles = nil;
+		self.directoryFilesSource = nil;
+		self.directoryFilesDestination = nil;
+		self.fswatchPath = nil;
+		self.syncFileModificationTimesPath = nil;
+		self.shellPath = nil;
 	}
 	return self;
 }
@@ -28,15 +32,26 @@
 /**
  * @discussion Initializes a new instance of a SyncFileInfos daemon thread parameters
  *             structure with the specified parameters
- * @param directoryFiles Directory to watch
+ * @param directoryFilesSource Source directory to watch
+ * @param directoryFilesDestination Destination directory to watch
+ * @param fswatchPath fswatch path
+ * @param syncFileModificationTimesPath SyncFileModificationTimes executable path
  * @return New instance
  */
--(id) initWithParams:(NSString*)directoryFiles
+-(id) initWithParams:(NSString*)directoryFilesSource
+	directoryFilesDestination:(NSString*)directoryFilesDestination
+	fswatchPath:(NSString*)fswatchPath
+	syncFileModificationTimesPath:(NSString*)syncFileModificationTimesPath
+	shellPath:(NSString*)shellPath
 {
 	self = [super init];
 	if( self != nil )
 	{
-		self.directoryFiles = directoryFiles;
+		self.directoryFilesSource = directoryFilesSource;
+		self.directoryFilesDestination = directoryFilesDestination;
+		self.fswatchPath = fswatchPath;
+		self.syncFileModificationTimesPath = syncFileModificationTimesPath;
+		self.shellPath = shellPath;
 	}
 	return self;
 }

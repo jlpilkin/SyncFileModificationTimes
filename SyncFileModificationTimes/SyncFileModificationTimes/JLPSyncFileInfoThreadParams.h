@@ -13,8 +13,16 @@
  */
 @interface JLPSyncFileInfoThreadParams : NSObject
 
-@property NSString* directoryFiles;
+@property NSString* directoryFilesSource;
+@property NSString* directoryFilesDestination;
+@property NSString* fswatchPath;
+@property NSString* syncFileModificationTimesPath;
+@property NSString* shellPath;
 
--(id) initWithParams:(NSString*)directoryFiles;
+-(id) initWithParams:(NSString*)directoryFilesSource
+	directoryFilesDestination:(NSString*)directoryFilesDestination
+	fswatchPath:(NSString*)fswatchPath
+	syncFileModificationTimesPath:(NSString*)syncFileModificationTimesPath
+	shellPath:(NSString*)shellPath;
 
 @end
