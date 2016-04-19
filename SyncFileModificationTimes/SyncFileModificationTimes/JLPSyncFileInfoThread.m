@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "JLPSyncFileInfoThread.h"
 #import "JLPSyncFileInfoThreadParams.h"
+#import "JLPSynchronizedConsole.h"
 
 @implementation JLPSyncFileInfoThread
 
@@ -82,7 +83,7 @@
 		NSData* dataLast = [fileXargs availableData];
 		if( dataLast != nil && [dataLast bytes] != NULL )
 		{
-			printf( "%s", (const char*)[dataLast bytes] );
+			[JLPSynchronizedConsole printString:(const char*)[dataLast bytes]];
 		}
 		else
 		{
@@ -92,7 +93,7 @@
 	NSData* dataLast = [fileXargs availableData];
 	if( dataLast != nil && [dataLast bytes] != NULL )
 	{
-		printf( "%s", (const char*)[dataLast bytes] );
+		[JLPSynchronizedConsole printString:(const char*)[dataLast bytes]];
 	}
 }
 

@@ -15,6 +15,7 @@
 		9E80C8771C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E80C8761C7D0A3A00D3C6C2 /* JLPSyncFileInfo.m */; };
 		9EBF6A211CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */; };
 		9EBF6A241CC456D800C9E1DE /* JLPSyncFileInfoThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */; };
+		9EBF6A271CC5FB4C00C9E1DE /* JLPSynchronizedConsole.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBF6A261CC5FB4C00C9E1DE /* JLPSynchronizedConsole.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +54,8 @@
 		9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfoThreadParams.m; sourceTree = "<group>"; };
 		9EBF6A221CC456D800C9E1DE /* JLPSyncFileInfoThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSyncFileInfoThread.h; sourceTree = "<group>"; };
 		9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSyncFileInfoThread.m; sourceTree = "<group>"; };
+		9EBF6A251CC5FB4C00C9E1DE /* JLPSynchronizedConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLPSynchronizedConsole.h; sourceTree = "<group>"; };
+		9EBF6A261CC5FB4C00C9E1DE /* JLPSynchronizedConsole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLPSynchronizedConsole.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +105,8 @@
 				9EBF6A201CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m */,
 				9EBF6A221CC456D800C9E1DE /* JLPSyncFileInfoThread.h */,
 				9EBF6A231CC456D800C9E1DE /* JLPSyncFileInfoThread.m */,
+				9EBF6A251CC5FB4C00C9E1DE /* JLPSynchronizedConsole.h */,
+				9EBF6A261CC5FB4C00C9E1DE /* JLPSynchronizedConsole.m */,
 				9E80C8691C7CE86800D3C6C2 /* main.m */,
 				9E6C6D0A1CC35A3D00887455 /* daemon.m */,
 			);
@@ -196,6 +201,7 @@
 			files = (
 				9EBF6A241CC456D800C9E1DE /* JLPSyncFileInfoThread.m in Sources */,
 				9E6C6D1D1CC35BA700887455 /* JLPSyncFileInfoDaemonSettings.m in Sources */,
+				9EBF6A271CC5FB4C00C9E1DE /* JLPSynchronizedConsole.m in Sources */,
 				9E6C6D181CC35AB500887455 /* JPToolsStringUtils.m in Sources */,
 				9E6C6D171CC35A9E00887455 /* daemon.m in Sources */,
 				9EBF6A211CC4569700C9E1DE /* JLPSyncFileInfoThreadParams.m in Sources */,
