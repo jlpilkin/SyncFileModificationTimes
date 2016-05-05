@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class JLPSyncFileInfoThread;
+
 /**
  * @discussion Parameters to pass to a SyncFileInfos daemon thread process
  */
@@ -18,6 +20,7 @@
 @property NSString* fswatchPath;
 @property NSString* syncFileModificationTimesPath;
 @property NSString* shellPath;
+@property JLPSyncFileInfoThread* thread;
 
 -(id) initWithParams:(NSString*)directoryFilesSource
 	directoryFilesDestination:(NSString*)directoryFilesDestination

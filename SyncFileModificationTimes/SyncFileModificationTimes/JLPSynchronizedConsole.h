@@ -10,9 +10,6 @@
 
 @interface JLPSynchronizedConsole : NSObject
 
-+(BOOL) isPrinting;
-+(void) setIsPrinting:(BOOL)isPrinting;
-
 +(void) printString:(const char*)string;
 
 @end

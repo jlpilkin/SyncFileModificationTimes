@@ -12,33 +12,11 @@
 
 static BOOL _JLPSynchronizedConsole_isPrinting;
 
-+(BOOL) isPrinting
-{
-	@synchronized( self )
-	{
-		return _JLPSynchronizedConsole_isPrinting;
-	}
-}
-
-+(void) setIsPrinting:(BOOL)isPrinting
-{
-	@synchronized( self )
-	{
-		_JLPSynchronizedConsole_isPrinting = isPrinting;
-	}
-}
-
 +(void) printString:(const char*)string
 {
 	@synchronized( self )
 	{
-		while( [self isPrinting] )
-		{
-			[NSThread sleepForTimeInterval:0.001];
-		}
-		[self setIsPrinting:true];
 		printf( "%s", string );
-		[self setIsPrinting:false];
 	}
 }
 

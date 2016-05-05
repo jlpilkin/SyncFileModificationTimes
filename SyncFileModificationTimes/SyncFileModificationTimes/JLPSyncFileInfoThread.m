@@ -15,6 +15,23 @@
 
 /**
  * @discussion Initializes a new instance of a SyncFileInfos daemon thread
+ *             with no parameters
+ * @return New empty instance
+ */
+-(id) init
+{
+	self = [super init];
+	if( self != nil )
+	{
+		self->_done = 0;
+		self.threadFswatch = nil;
+		self.dataAvailable = nil;
+	}
+	return self;
+}
+
+/**
+ * @discussion Initializes a new instance of a SyncFileInfos daemon thread
  *             with the specified parameters
  * @param params SyncFileInfos daemon thread parameters
  * @return New instance
@@ -24,11 +41,37 @@
 	self = [super init];
 	if( self != nil )
 	{
+		self->_done = 0;
+		self.dataAvailable = nil;
+		params.thread = self;
 		self.threadFswatch = [[NSThread alloc] initWithTarget:self.class
 			selector:@selector(runFswatchThread:)
 			object:(NSObject*)params];
 	}
 	return self;
+}
+
+/**
+ * @discussion Determines if this thread is set to the done state
+ * @return Done state
+ */
+-(BOOL) isDone
+{
+	@synchronized( self )
+	{
+		return self->_done == 1;
+	}
+}
+
+/**
+ * @discussion Sets the done state to true
+ */
+-(void) setDone
+{
+	@synchronized( self )
+	{
+		self->_done = 1;
+	}
 }
 
 /**
@@ -45,6 +88,11 @@
 	}
 	JLPSyncFileInfoThreadParams* threadParams = (JLPSyncFileInfoThreadParams*)params;
 
+	// Enable unbuffered IO
+	NSDictionary *defaultEnvironment = [[NSProcessInfo processInfo] environment];
+	NSMutableDictionary *environment = [[NSMutableDictionary alloc] initWithDictionary:defaultEnvironment];
+	[environment setObject:@"YES" forKey:@"NSUnbufferedIO"];
+	
 	// Create NSTask for fswatch command
 	NSPipe *pipeFswatch = [NSPipe pipe];
 	NSTask *taskFswatch = [[NSTask alloc] init];
@@ -55,6 +103,7 @@
 		@"-0",
 		threadParams.directoryFilesSource
 	];
+	[taskFswatch setEnvironment:environment];
 	
 	// Create NSTask for xargs command
 	NSPipe *pipeXargs = [NSPipe pipe];
@@ -73,28 +122,109 @@
 		threadParams.directoryFilesDestination,
 		@"{}"
 	];
+	[taskXargs setEnvironment:environment];
+	
+	// Get the file handle of xargs
+	NSFileHandle *fileXargs = pipeXargs.fileHandleForReading;
+	
+	// Register for file data notifications
+	[[NSNotificationCenter defaultCenter]
+		addObserver:threadParams.thread
+		selector:@selector(readPipe:)
+		name: NSFileHandleReadCompletionNotification
+		object: fileXargs];
+
+	// Set the xargs pipe to send data notifications in the background
+	[fileXargs readInBackgroundAndNotify];
+	
+	// Launch tasks
 	[taskFswatch launch];
 	[taskXargs launch];
 	
-	// Keep reading the task
-	NSFileHandle *fileXargs = pipeXargs.fileHandleForReading;
-	while( [taskFswatch isRunning] )
+	// Get the current run loop
+	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
+
+    // Create a run loop observer and attach it to the run loop.
+	CFRunLoopObserverContext context = {
+		0,
+		(__bridge void *)(self),
+		NULL,
+		NULL,
+		NULL
+	};
+	CFRunLoopObserverRef observer = CFRunLoopObserverCreate(
+		kCFAllocatorDefault,
+		kCFRunLoopAllActivities,
+		YES,
+		0,
+		&runLoopObserver,
+		&context
+	);
+ 
+	// Add the observer if possible
+    if( observer )
+    {
+        CFRunLoopRef cfLoop = [myRunLoop getCFRunLoop];
+        CFRunLoopAddObserver( cfLoop, observer, kCFRunLoopDefaultMode );
+    }
+	
+	// Process the run loop or end the task if triggered
+	while( [taskFswatch isRunning] || [taskXargs isRunning] )
 	{
-		NSData* dataLast = [fileXargs availableData];
-		if( dataLast != nil && [dataLast bytes] != NULL )
+		if( [threadParams.thread isDone] )
 		{
-			[JLPSynchronizedConsole printString:(const char*)[dataLast bytes]];
+			[taskFswatch terminate];
+			[taskXargs terminate];
 		}
 		else
 		{
-			[NSThread sleepForTimeInterval:0.010];
+			[myRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];;
 		}
 	}
-	NSData* dataLast = [fileXargs availableData];
-	if( dataLast != nil && [dataLast bytes] != NULL )
+}
+
+/**
+ * @discussion Run loop observer
+ */
+void runLoopObserver(
+	CFRunLoopObserverRef observer,
+	CFRunLoopActivity activity,
+	void* info
+)
+{
+    // Do nothing
+}
+
+/**
+ * @discussion Determines whether this thread is still running
+ * @return True if running
+ */
+-(BOOL) isRunning
+{
+	@synchronized( self )
 	{
-		[JLPSynchronizedConsole printString:(const char*)[dataLast bytes]];
+		return self.threadFswatch != nil && [self.threadFswatch isExecuting];
 	}
+}
+
+/**
+ * @discussion Reads the data from the pipe from a data available notification
+ * @param notification Data available notification
+ */
+-(void) readPipe:(NSNotification*)notification
+{
+	// Get the data
+	NSData *data = [[notification userInfo]
+        objectForKey:NSFileHandleNotificationDataItem];
+
+	// Display the data
+	if( data != nil && data.length > 0 )
+	{
+		[JLPSynchronizedConsole printString:(const char*)[data bytes]];
+	}
+	
+	// Re-register for notifications
+	[[notification object] readInBackgroundAndNotify];
 }
 
 @end

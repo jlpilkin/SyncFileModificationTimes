@@ -12,6 +12,11 @@
 #import "JLPSyncFileInfoThread.h"
 #import "JLPSyncFileInfoThreadParams.h"
 
+void term( int signum );
+
+JLPSyncFileInfoThread* _threadFirst;
+JLPSyncFileInfoThread* _threadSecond;
+
 /**
  * @discussion Main entry point for the daemon application
  *
@@ -128,6 +133,15 @@ int main( int argc, const char * argv[] )
 			printf( "%s\n", [errorDaemonSettings cStringUsingEncoding:[NSString defaultCStringEncoding]] );
 			return 1;
 		}
+
+		// Set up the termination action
+		_threadFirst = nil;
+		_threadSecond = nil;
+		struct sigaction action;
+		memset( &action, 0, sizeof( struct sigaction ) );
+		action.sa_handler = term;
+		sigaction( SIGTERM, &action, NULL );
+		sigaction( SIGINT, &action, NULL );
 		
 		// Create and start threads for each directory
 		JLPSyncFileInfoThreadParams* threadParamsFirst = [[JLPSyncFileInfoThreadParams alloc]
@@ -144,14 +158,26 @@ int main( int argc, const char * argv[] )
 			shellPath:@"/bin/bash"];
 		JLPSyncFileInfoThread* threadFirst = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsFirst];
 		JLPSyncFileInfoThread* threadSecond = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsSecond];
+		_threadFirst = threadFirst;
+		_threadSecond = threadSecond;
 		[threadFirst.threadFswatch start];
 		[threadSecond.threadFswatch start];
 		
 		// Wait for threads to end or a SIGTERM
-		while( [threadFirst.threadFswatch isExecuting] || [threadSecond.threadFswatch isExecuting] )
+		while( [threadFirst isRunning] || [threadSecond isRunning] )
 		{
 			[NSThread sleepForTimeInterval:0.010];
 		}
 	}
 	return 0;
+}
+
+/**
+ * @discussion Handles the termination of this process
+ */
+void term( int signum )
+{
+	printf( "%s\n", "[INFO] Received termination signal - exiting..." );
+	[_threadFirst setDone];
+	[_threadSecond setDone];
 }

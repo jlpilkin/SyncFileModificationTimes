@@ -15,10 +15,24 @@
  *             SyncFileModificationTimes daemon
  */
 @interface JLPSyncFileInfoThread : NSObject
+{
+	volatile sig_atomic_t _done;
+}
 
 @property NSThread* threadFswatch;
+@property NSData* dataAvailable;
 
 -(id) initWithParams:(JLPSyncFileInfoThreadParams*)params;
+-(BOOL) isDone;
+-(void) setDone;
+-(BOOL) isRunning;
 +(void) runFswatchThread:(NSObject*)params;
+-(void) readPipe:(NSNotification*)notification;
+
+void runLoopObserver(
+	CFRunLoopObserverRef observer,
+	CFRunLoopActivity activity,
+	void* info
+);
 
 @end

@@ -20,6 +20,7 @@
 	self = [super init];
 	if( self != nil )
 	{
+		self.thread = nil;
 		self.directoryFilesSource = nil;
 		self.directoryFilesDestination = nil;
 		self.fswatchPath = nil;
@@ -47,6 +48,7 @@
 	self = [super init];
 	if( self != nil )
 	{
+		self.thread = nil;
 		self.directoryFilesSource = directoryFilesSource;
 		self.directoryFilesDestination = directoryFilesDestination;
 		self.fswatchPath = fswatchPath;
