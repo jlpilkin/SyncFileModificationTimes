@@ -25,7 +25,6 @@
 	{
 		self->_done = 0;
 		self.threadFswatch = nil;
-		self.dataAvailable = nil;
 	}
 	return self;
 }
@@ -42,7 +41,6 @@
 	if( self != nil )
 	{
 		self->_done = 0;
-		self.dataAvailable = nil;
 		params.thread = self;
 		self.threadFswatch = [[NSThread alloc] initWithTarget:self.class
 			selector:@selector(runFswatchThread:)

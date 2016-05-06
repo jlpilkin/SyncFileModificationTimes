@@ -20,7 +20,6 @@
 }
 
 @property NSThread* threadFswatch;
-@property NSData* dataAvailable;
 
 -(id) initWithParams:(JLPSyncFileInfoThreadParams*)params;
 -(BOOL) isDone;
