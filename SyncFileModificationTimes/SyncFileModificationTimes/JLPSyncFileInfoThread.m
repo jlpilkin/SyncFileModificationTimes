@@ -24,6 +24,10 @@
 	if( self != nil )
 	{
 		self->_done = 0;
+		self->_numTasksEnded = 0;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotifyDone:) name:@"JLPSyncFileInfoThread_Done" object:nil];
+		self.taskFswatch = nil;
+		self.taskXargs = nil;
 		self.threadFswatch = nil;
 	}
 	return self;
@@ -41,7 +45,11 @@
 	if( self != nil )
 	{
 		self->_done = 0;
+		self->_numTasksEnded = 0;
 		params.thread = self;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotifyDone:) name:@"JLPSyncFileInfoThread_Done" object:nil];
+		self.taskFswatch = nil;
+		self.taskXargs = nil;
 		self.threadFswatch = [[NSThread alloc] initWithTarget:self.class
 			selector:@selector(runFswatchThread:)
 			object:(NSObject*)params];
@@ -62,14 +70,40 @@
 }
 
 /**
- * @discussion Sets the done state to true
+ * @discussion Notifies this thread of a done state
  */
 -(void) setDone
+{
+	[self notifyDone];
+}
+
+/**
+ * @discussion Sets the done state to true
+ */
+-(void) setDoneState
 {
 	@synchronized( self )
 	{
 		self->_done = 1;
 	}
+}
+
+/**
+ * @discussion Notifies the thread of the done state
+ */
+-(void) notifyDone
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"JLPSyncFileInfoThread_Done" object:self];
+}
+
+/**
+ * @discussion Performs the done state notification action.
+ *             All associated tasks are terminated.
+ */
+-(void) handleNotifyDone:(NSNotification*)note
+{
+	[self.taskFswatch terminate];
+	[self.taskXargs terminate];
 }
 
 /**
@@ -102,6 +136,8 @@
 		threadParams.directoryFilesSource
 	];
 	[taskFswatch setEnvironment:environment];
+	taskFswatch.terminationHandler = ^(NSTask* task){ [threadParams.thread taskTermination:task]; };
+	threadParams.thread.taskFswatch = taskFswatch;
 	
 	// Create NSTask for xargs command
 	NSPipe *pipeXargs = [NSPipe pipe];
@@ -121,6 +157,8 @@
 		@"{}"
 	];
 	[taskXargs setEnvironment:environment];
+	taskXargs.terminationHandler = ^(NSTask* task){ [threadParams.thread taskTermination:task]; };
+	threadParams.thread.taskXargs = taskXargs;
 	
 	// Get the file handle of xargs
 	NSFileHandle *fileXargs = pipeXargs.fileHandleForReading;
@@ -167,18 +205,9 @@
 	}
 	
 	// Process the run loop or end the task if triggered
-	while( [taskFswatch isRunning] || [taskXargs isRunning] )
-	{
-		if( [threadParams.thread isDone] )
-		{
-			[taskFswatch terminate];
-			[taskXargs terminate];
-		}
-		else
-		{
-			[myRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-		}
-	}
+	JLPSyncFileInfoThread* threadLocal = threadParams.thread;
+	while( ![threadLocal tasksEnded] && [myRunLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]] );
+	[threadLocal setDoneState];
 }
 
 /**
@@ -199,10 +228,7 @@ void runLoopObserver(
  */
 -(BOOL) isRunning
 {
-	@synchronized( self )
-	{
-		return self.threadFswatch != nil && [self.threadFswatch isExecuting];
-	}
+	return ![self isDone];
 }
 
 /**
@@ -223,6 +249,23 @@ void runLoopObserver(
 	
 	// Re-register for notifications
 	[[notification object] readInBackgroundAndNotify];
+}
+
+/**
+ * @discussion Increments the number of tasks ended when a task ends
+ * @param task Task which invoked this notification
+ */
+-(void) taskTermination:(NSTask*)task
+{
+	OSAtomicIncrement64Barrier( &self->_numTasksEnded );
+}
+
+/**
+ * @discussion Determines if both tasks have ended
+ */
+-(BOOL) tasksEnded
+{
+	return OSAtomicCompareAndSwap64Barrier( 2, 2, &self->_numTasksEnded );
 }
 
 @end

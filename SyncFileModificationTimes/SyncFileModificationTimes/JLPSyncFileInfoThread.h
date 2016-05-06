@@ -17,16 +17,24 @@
 @interface JLPSyncFileInfoThread : NSObject
 {
 	volatile sig_atomic_t _done;
+	volatile int64_t _numTasksEnded;
 }
 
 @property NSThread* threadFswatch;
+@property NSTask* taskFswatch;
+@property NSTask* taskXargs;
 
 -(id) initWithParams:(JLPSyncFileInfoThreadParams*)params;
 -(BOOL) isDone;
 -(void) setDone;
+-(void) setDoneState;
+-(void) notifyDone;
+-(void) handleNotifyDone:(NSNotification*)note;
 -(BOOL) isRunning;
 +(void) runFswatchThread:(NSObject*)params;
 -(void) readPipe:(NSNotification*)notification;
+-(void) taskTermination:(NSTask*)task;
+-(BOOL) tasksEnded;
 
 void runLoopObserver(
 	CFRunLoopObserverRef observer,

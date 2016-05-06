@@ -17,6 +17,8 @@ void term( int signum );
 JLPSyncFileInfoThread* _threadFirst;
 JLPSyncFileInfoThread* _threadSecond;
 
+dispatch_semaphore_t _main_done;
+
 /**
  * @discussion Main entry point for the daemon application
  *
@@ -172,6 +174,9 @@ int main( int argc, const char * argv[] )
 		sigaction( SIGTERM, &action, NULL );
 		sigaction( SIGINT, &action, NULL );
 		
+		// Create the done semaphore
+		_main_done = dispatch_semaphore_create(0);
+		
 		// Create and start threads for each directory
 		JLPSyncFileInfoThreadParams* threadParamsFirst = [[JLPSyncFileInfoThreadParams alloc]
 			initWithParams:daemonSettings.directoryFirst
@@ -193,9 +198,12 @@ int main( int argc, const char * argv[] )
 		_threadSecond = threadSecond;
 		[threadFirst.threadFswatch start];
 		[threadSecond.threadFswatch start];
-		
+
 		// Wait for threads to end or a SIGTERM
-		while( [threadFirst isRunning] || [threadSecond isRunning] )
+		dispatch_semaphore_wait( _main_done, DISPATCH_TIME_FOREVER );
+		while(
+			( [threadFirst isRunning] || [threadSecond isRunning] )
+		)
 		{
 			[NSThread sleepForTimeInterval:0.010];
 		}
@@ -211,4 +219,5 @@ void term( int signum )
 	printf( "%s\n", "[INFO] Received termination signal - exiting..." );
 	[_threadFirst setDone];
 	[_threadSecond setDone];
+	dispatch_semaphore_signal( _main_done );
 }
