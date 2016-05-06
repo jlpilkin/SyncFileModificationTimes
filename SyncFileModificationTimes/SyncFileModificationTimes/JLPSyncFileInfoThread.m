@@ -108,7 +108,7 @@
 	// Create NSTask for xargs command
 	NSPipe *pipeXargs = [NSPipe pipe];
 	NSTask *taskXargs = [[NSTask alloc] init];
-	taskXargs.launchPath = @"/usr/bin/xargs";
+	taskXargs.launchPath = threadParams.xargsPath;
 	[taskXargs setStandardInput: pipeFswatch];
 	[taskXargs setStandardOutput: pipeXargs];
 	taskXargs.arguments = @[

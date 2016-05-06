@@ -56,10 +56,12 @@ int main( int argc, const char * argv[] )
 			return 1;
 		}
 		
-		// Determine the location of fswatch
-		// Obtain the path and find one which contains fswatch
+		// Determine the location of fswatch and xargs
+		// Obtain the path and find one which contains fswatch and/or xargs
 		NSString* errorFswatch = @"[ERROR] Unable to determine location of fswatch";
+		NSString* errorXargs = @"[ERROR] Unable to determine location of xargs";
 		NSString* fswatchPath = nil;
+		NSString* xargsPath = nil;
 		NSString* environmentPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PATH"];
 		if( [JPToolsStringUtils isNilOrWhitespace:environmentPath] )
 		{
@@ -83,7 +85,10 @@ int main( int argc, const char * argv[] )
 			// Append 'fswatch' to this path component
 			NSString* fswatchPathPreliminary = [[JPToolsStringUtils trim:pathComponent] stringByAppendingPathComponent:@"fswatch"];
 			
-			// Determine if this file exists
+			// Append 'fswatch' to this path component
+			NSString* xargsPathPreliminary = [[JPToolsStringUtils trim:pathComponent] stringByAppendingPathComponent:@"xargs"];
+			
+			// Determine if fswatch exists
 			if(
 				![JPToolsStringUtils isNilOrWhitespace:fswatchPathPreliminary] &&
 				[[NSFileManager defaultManager] fileExistsAtPath:fswatchPathPreliminary isDirectory:&bIsDirectory] &&
@@ -91,12 +96,36 @@ int main( int argc, const char * argv[] )
 			)
 			{
 				fswatchPath = fswatchPathPreliminary;
-				break;
+				
+				if( fswatchPath != nil && xargsPath != nil )
+				{
+					break;
+				}
+			}
+
+			// Determine if fswatch exists
+			if(
+				![JPToolsStringUtils isNilOrWhitespace:xargsPathPreliminary] &&
+				[[NSFileManager defaultManager] fileExistsAtPath:xargsPathPreliminary isDirectory:&bIsDirectory] &&
+				!bIsDirectory
+			)
+			{
+				xargsPath = xargsPathPreliminary;
+				
+				if( fswatchPath != nil && xargsPath != nil )
+				{
+					break;
+				}
 			}
 		}
 		if( [JPToolsStringUtils isNilOrWhitespace:fswatchPath] )
 		{
 			printf( "%s\n", [errorFswatch cStringUsingEncoding:[NSString defaultCStringEncoding]] );
+			return 1;
+		}
+		if( [JPToolsStringUtils isNilOrWhitespace:xargsPath] )
+		{
+			printf( "%s\n", [errorXargs cStringUsingEncoding:[NSString defaultCStringEncoding]] );
 			return 1;
 		}
 		
@@ -148,12 +177,14 @@ int main( int argc, const char * argv[] )
 			initWithParams:daemonSettings.directoryFirst
 			directoryFilesDestination:daemonSettings.directorySecond
 			fswatchPath:fswatchPath
+			xargsPath:xargsPath
 			syncFileModificationTimesPath:pathSyncFileModificationTimes
 			shellPath:@"/bin/bash"];
 		JLPSyncFileInfoThreadParams* threadParamsSecond = [[JLPSyncFileInfoThreadParams alloc]
 			initWithParams:daemonSettings.directorySecond
 			directoryFilesDestination:daemonSettings.directoryFirst
 			fswatchPath:fswatchPath
+			xargsPath:xargsPath
 			syncFileModificationTimesPath:pathSyncFileModificationTimes
 			shellPath:@"/bin/bash"];
 		JLPSyncFileInfoThread* threadFirst = [[JLPSyncFileInfoThread alloc] initWithParams:threadParamsFirst];

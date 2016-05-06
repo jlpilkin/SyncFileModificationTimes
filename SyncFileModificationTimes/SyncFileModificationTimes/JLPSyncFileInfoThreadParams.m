@@ -24,6 +24,7 @@
 		self.directoryFilesSource = nil;
 		self.directoryFilesDestination = nil;
 		self.fswatchPath = nil;
+		self.xargsPath = nil;
 		self.syncFileModificationTimesPath = nil;
 		self.shellPath = nil;
 	}
@@ -42,6 +43,7 @@
 -(id) initWithParams:(NSString*)directoryFilesSource
 	directoryFilesDestination:(NSString*)directoryFilesDestination
 	fswatchPath:(NSString*)fswatchPath
+	xargsPath:(NSString*)xargsPath
 	syncFileModificationTimesPath:(NSString*)syncFileModificationTimesPath
 	shellPath:(NSString*)shellPath
 {
@@ -52,6 +54,7 @@
 		self.directoryFilesSource = directoryFilesSource;
 		self.directoryFilesDestination = directoryFilesDestination;
 		self.fswatchPath = fswatchPath;
+		self.xargsPath = xargsPath;
 		self.syncFileModificationTimesPath = syncFileModificationTimesPath;
 		self.shellPath = shellPath;
 	}

@@ -18,6 +18,7 @@
 @property NSString* directoryFilesSource;
 @property NSString* directoryFilesDestination;
 @property NSString* fswatchPath;
+@property NSString* xargsPath;
 @property NSString* syncFileModificationTimesPath;
 @property NSString* shellPath;
 @property JLPSyncFileInfoThread* thread;
@@ -25,6 +26,7 @@
 -(id) initWithParams:(NSString*)directoryFilesSource
 	directoryFilesDestination:(NSString*)directoryFilesDestination
 	fswatchPath:(NSString*)fswatchPath
+	xargsPath:(NSString*)xargsPath
 	syncFileModificationTimesPath:(NSString*)syncFileModificationTimesPath
 	shellPath:(NSString*)shellPath;
 
