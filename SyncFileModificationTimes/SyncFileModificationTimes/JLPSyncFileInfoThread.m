@@ -176,7 +176,7 @@
 		}
 		else
 		{
-			[myRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];;
+			[myRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 		}
 	}
 }
