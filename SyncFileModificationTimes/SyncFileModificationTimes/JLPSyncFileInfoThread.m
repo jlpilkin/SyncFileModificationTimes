@@ -144,7 +144,7 @@
 	// Get the current run loop
 	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
 
-    // Create a run loop observer and attach it to the run loop.
+	// Create a run loop observer and attach it to the run loop.
 	CFRunLoopObserverContext context = {
 		0,
 		(__bridge void *)(self),
@@ -162,11 +162,11 @@
 	);
  
 	// Add the observer if possible
-    if( observer )
-    {
-        CFRunLoopRef cfLoop = [myRunLoop getCFRunLoop];
-        CFRunLoopAddObserver( cfLoop, observer, kCFRunLoopDefaultMode );
-    }
+	if( observer )
+	{
+		CFRunLoopRef cfLoop = [myRunLoop getCFRunLoop];
+		CFRunLoopAddObserver( cfLoop, observer, kCFRunLoopDefaultMode );
+	}
 	
 	// Process the run loop or end the task if triggered
 	while( [taskFswatch isRunning] || [taskXargs isRunning] )
