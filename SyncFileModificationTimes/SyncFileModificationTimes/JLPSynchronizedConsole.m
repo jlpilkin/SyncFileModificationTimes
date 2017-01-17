@@ -16,7 +16,9 @@ static BOOL _JLPSynchronizedConsole_isPrinting;
 {
 	@synchronized( self )
 	{
+		_JLPSynchronizedConsole_isPrinting = true;
 		printf( "%s", string );
+		_JLPSynchronizedConsole_isPrinting = false;
 	}
 }
 
